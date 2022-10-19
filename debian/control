@@ -1,0 +1,21 @@
+Source: stylebook
+Section: java
+Priority: optional
+Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Uploaders: Jakub Adam <jakub.adam@ktknet.cz>
+Build-Depends:
+ ant,
+ debhelper (>= 11),
+ default-jdk,
+ javahelper (>= 0.33~),
+ libxerces2-java
+Standards-Version: 4.1.3
+Vcs-Git: https://anonscm.debian.org/git/pkg-java/stylebook.git
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-java/stylebook.git
+
+Package: libstylebook-java
+Architecture: all
+Depends: libxerces2-java, ${misc:Depends}
+Description: XML application for authoring web site content
+ Stylebook is a way to convert a set of XML files into a proper web
+ site with consistent navigation and layout.

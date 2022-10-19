@@ -1,0 +1,27 @@
+--- stylebook-1.0~b3~svn20061109.orig/src/org/apache/stylebook/printers/ImagePrinter.java
++++ stylebook-1.0~b3~svn20061109/src/org/apache/stylebook/printers/ImagePrinter.java
+@@ -10,6 +10,7 @@ package org.apache.stylebook.printers;
+ import org.apache.stylebook.*;
+ import javax.imageio.*;
+ import javax.imageio.plugins.jpeg.*;
++import javax.imageio.stream.*;
+ import java.io.IOException;
+ import java.io.OutputStream;
+ import java.io.PrintStream;
+@@ -145,13 +146,13 @@ public class ImagePrinter extends Abstra
+             }
+         }
+ 
+-        // Write out image (highest quality for jpeg data)
++        // Write out image
+         ImageWriter encoder =
+             (ImageWriter)ImageIO.getImageWritersByFormatName("jpeg").next();
+-        JPEGImageWriteParam param = new JPEGImageWriteParam(null);        
++        ImageWriteParam param = encoder.getDefaultWriteParam();
+         param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+         param.setCompressionQuality(1);
+-        encoder.setOutput(out);
++        encoder.setOutput(new MemoryCacheImageOutputStream(out));
+         encoder.write(null, new IIOImage(img, null, null), param);
+         out.flush();
+     }

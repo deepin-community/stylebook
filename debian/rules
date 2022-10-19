@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+
+JAVA_HOME	:= /usr/lib/jvm/default-java
+DEB_JARS_BASE	:= /usr/share/java
+JAVACMD  	:= $(JAVA_HOME)/bin/java
+
+DEB_JARS 	:= ant ant-launcher xercesImpl
+
+DEB_CLASSPATH = $(shell for jar in $(DEB_JARS); do \
+		if [ -f "$$jar" ]; then echo -n "$${jar}:"; fi; \
+		if [ -f "$$jar".jar ]; then echo -n "$${jar}.jar:"; fi; \
+		if [ -f $(DEB_JARS_BASE)/"$$jar" ]; then echo -n "$(DEB_JARS_BASE)/$${jar}:"; fi; \
+		if [ -f $(DEB_JARS_BASE)/"$$jar".jar ]; then echo -n "$(DEB_JARS_BASE)/$${jar}.jar:"; fi; \
+		done; \
+		if [ -f "$(JAVA_HOME)/lib/tools.jar" ]; then echo -n "$(JAVA_HOME)/lib/tools.jar"; fi)
+
+DEB_ANT_ARGS	:= -Dbin.dir=build -Dant.build.javac.source=1.5 \
+	    -Dant.build.javac.target=1.5
+ANT_INVOKE	:= $(JAVACMD) -classpath $(DEB_CLASSPATH) \
+		org.apache.tools.ant.Main $(DEB_ANT_ARGS)
+
+PKGNAME		:= stylebook
+INSTALLDIR	:= $(CURDIR)/debian/lib$(PKGNAME)-java
+JAVALIBDIR	:= $(INSTALLDIR)/usr/share/java
+
+TARGETS 	:= build build-arch build-indep clean binary-indep binary-arch binary install
+
+$(TARGETS):
+	dh $@
+
+override_dh_auto_build:
+	$(ANT_INVOKE)
+
+override_dh_auto_clean:
+	$(ANT_INVOKE) clean
+
+override_dh_auto_install:
+	$(eval JARNAME := $(shell basename build/$(PKGNAME)-*_xalan-2.jar))
+	jh_classpath --classpath="/usr/share/java/xercesImpl.jar" build/$(JARNAME)
+	dh_install -plibstylebook-java build/$(JARNAME) /usr/share/java
+	dh_link -plibstylebook-java usr/share/java/$(JARNAME) usr/share/java/$(PKGNAME).jar
+
+.PHONY: $(TARGETS)
+

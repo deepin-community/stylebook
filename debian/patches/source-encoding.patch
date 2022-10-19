@@ -1,0 +1,23 @@
+Description: Set the source encoding to fix the build failures with recent JDKs
+Author: Emmanuel Bourg <ebourg@apache.org>
+Forwarded: no
+--- a/build.xml
++++ b/build.xml
+@@ -71,7 +71,7 @@
+        If compiling version to run with Xalan-J 2, must not include XalanProcessor in the compile. -->
+   
+   <target name="compile" depends="prepare">
+-    <javac srcdir="${build.src}" excludes="org/apache/stylebook/processors/Xalan2Processor.java" destdir="${build.dest}" classpath="${classpath}" debug="${debug}"/>
++    <javac srcdir="${build.src}" excludes="org/apache/stylebook/processors/Xalan2Processor.java" destdir="${build.dest}" classpath="${classpath}" debug="${debug}" encoding="ISO-8859-1"/>
+     <copy todir="${build.dest}/org/apache/stylebook/data">
+       <fileset dir="${build.src}/org/apache/stylebook/data"/>
+     </copy>
+@@ -83,7 +83,7 @@
+   
+ <!--Compile and Package to work with Xalan-J 2 -->
+   <target name="compile2" depends="prepare">
+-    <javac srcdir="${src.dir}" excludes="org/apache/stylebook/processors/XalanProcessor.java" destdir="${build.dest}" debug="${debug}">
++    <javac srcdir="${src.dir}" excludes="org/apache/stylebook/processors/XalanProcessor.java" destdir="${build.dest}" debug="${debug}" encoding="ISO-8859-1">
+         <exclude name="**/org/apache/stylebook/processors/XalanProcessor.java"/>
+     </javac>
+     <copy todir="${build.dest}/org/apache/stylebook/data">
